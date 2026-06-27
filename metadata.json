@@ -1,0 +1,6 @@
+{
+  "name": "Axiom",
+  "description": "An advanced camera-ready computational calculator and global interactive formula index.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
