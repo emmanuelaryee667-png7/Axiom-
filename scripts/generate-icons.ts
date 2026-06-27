@@ -56,7 +56,7 @@ async function renderIcon(size: number, filename: string, isMaskable: boolean) {
 
     eqXMin = 290; eqXMax = 350;
     eqY1Min = 330; eqY1Max = 340;
-    eqY2Min = 350; meqY2Max: eqY2Min = 350; eqY2Max = 360;
+    eqY2Min = 350; eqY2Max = 360;
   }
 
   // Render pixels with scaled coordinates
@@ -85,15 +85,121 @@ async function renderIcon(size: number, filename: string, isMaskable: boolean) {
   } else if (typeof img.writeAsync === "function") {
     await img.writeAsync(outPath);
   }
-  console.log(`Successfully created ${filename}`);
+  console.log(`Successfully created icon: ${filename}`);
+}
+
+async function renderScreenshot(width: number, height: number, filename: string) {
+  // Deep space / dark slate blue background: #0f172a (RGBA: 0x0f172aff)
+  const bgDark = 0x0f172aff;
+  let img: any;
+  try {
+    img = new Jimp({ width, height, color: bgDark });
+  } catch (e) {
+    img = new Jimp(width, height, bgDark);
+  }
+
+  const colorWhite = 0xffffffff;
+  const colorGrey = 0x475569ff; // slate-600
+  const colorBlue = 0x2563ebff;  // blue-600
+  const colorEmerald = 0x10b981ff; // emerald-500
+  const colorPurple = 0x8b5cf6ff; // purple-500
+
+  // Draw decorative math grid lines
+  for (let x = 0; x < width; x += 40) {
+    for (let y = 0; y < height; y++) {
+      if (y % 10 < 3) {
+        img.setPixelColor(0x1e293bff, x, y); // slate-800 grid
+      }
+    }
+  }
+  for (let y = 0; y < height; y += 40) {
+    for (let x = 0; x < width; x++) {
+      if (x % 10 < 3) {
+        img.setPixelColor(0x1e293bff, x, y);
+      }
+    }
+  }
+
+  // Draw simulated coordinate system with a sine wave
+  const cy = Math.floor(height * 0.6); // Center Y of the graph
+  const cx = Math.floor(width * 0.5);  // Center X
+  
+  // Draw X axis
+  for (let x = 40; x < width - 40; x++) {
+    img.setPixelColor(colorGrey, x, cy);
+  }
+  // Draw Y axis
+  for (let y = 80; y < height - 80; y++) {
+    img.setPixelColor(colorGrey, cx, y);
+  }
+
+  // Draw smooth math sine function in emerald green
+  const amplitude = Math.min(width, height) * 0.15;
+  const frequency = 0.025;
+  for (let x = 50; x < width - 50; x++) {
+    const rx = x - cx;
+    const ry = Math.sin(rx * frequency) * amplitude;
+    const py = Math.round(cy - ry);
+    
+    if (py >= 0 && py < height) {
+      img.setPixelColor(colorEmerald, x, py);
+      if (py - 1 >= 0) img.setPixelColor(colorEmerald, x, py - 1);
+      if (py + 1 < height) img.setPixelColor(colorEmerald, x, py + 1);
+    }
+  }
+
+  // Draw quadratic curve (parabola) in beautiful purple
+  for (let x = cx - 120; x < cx + 120; x++) {
+    const rx = x - cx;
+    const ry = (rx * rx) * 0.005; // Parabola
+    const py = Math.round(cy - ry);
+    if (py >= 80 && py < height - 80) {
+      img.setPixelColor(colorPurple, x, py);
+      if (py - 1 >= 0) img.setPixelColor(colorPurple, x, py - 1);
+      if (py + 1 < height) img.setPixelColor(colorPurple, x, py + 1);
+    }
+  }
+
+  // Draw a beautiful header block card at the top
+  const headerYMin = 30;
+  const headerYMax = Math.min(height * 0.15, 100);
+  const headerXMin = 40;
+  const headerXMax = width - 40;
+  
+  for (let x = headerXMin; x < headerXMax; x++) {
+    for (let y = headerYMin; y < headerYMax; y++) {
+      const dx = x < headerXMin + 10 ? (headerXMin + 10 - x) : (x > headerXMax - 10 ? x - (headerXMax - 10) : 0);
+      const dy = y < headerYMin + 10 ? (headerYMin + 10 - y) : (y > headerYMax - 10 ? y - (headerYMax - 10) : 0);
+      if (dx * dx + dy * dy <= 100) {
+        img.setPixelColor(colorBlue, x, y);
+      } else if (dx === 0 && dy === 0) {
+        img.setPixelColor(colorBlue, x, y);
+      }
+    }
+  }
+
+  const outPath = path.join(PUBLIC_DIR, filename);
+  if (typeof img.write === "function") {
+    await img.write(outPath);
+  } else if (typeof img.writeAsync === "function") {
+    await img.writeAsync(outPath);
+  }
+  console.log(`Successfully created screenshot: ${filename}`);
 }
 
 async function run() {
   console.log("Starting high-fidelity mathematical PWA asset generation...");
+  
+  // Render App Icons
   await renderIcon(512, "icon-512.png", false);
   await renderIcon(192, "icon-192.png", false);
   await renderIcon(512, "icon-maskable-512.png", true);
   await renderIcon(192, "icon-maskable-192.png", true);
+
+  // Render PWA Screenshots (Desktop & Mobile)
+  await renderScreenshot(1280, 720, "screenshot-desktop.png");
+  await renderScreenshot(720, 1280, "screenshot-mobile.png");
+
   console.log("All high-fidelity PWA asset generation finished successfully!");
 }
 

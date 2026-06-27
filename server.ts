@@ -9,6 +9,17 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
+// Enable cross-origin resource sharing (CORS) so PWA analyzers (like PWABuilder) can fetch the manifest and icons
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Set up generous payload limits for base64 files and PDFs
 app.use(express.json({ limit: "30mb" }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
