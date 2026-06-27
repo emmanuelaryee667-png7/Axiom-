@@ -1,0 +1,67 @@
+{
+  "name": "Axiom | The Ultimate Math Engine",
+  "short_name": "Axiom",
+  "description": "A highly advanced, secure math engine, AI Snapshot Scanner, Formulas Codex, Practice Hub, and Spreadsheet workspace.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "any",
+  "categories": [
+    "education",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Calculators Workspace",
+      "short_name": "Calculators",
+      "description": "Open Axiom calculators & engine",
+      "url": "/?tab=engine",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Spreadsheets Workspace",
+      "short_name": "Spreadsheets",
+      "description": "Open Axiom sheets",
+      "url": "/?tab=sheets",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
