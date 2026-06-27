@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "name": "Axiom | The Ultimate Math Engine",
   "short_name": "Axiom",
   "description": "A highly advanced, secure math engine, AI Snapshot Scanner, Formulas Codex, Practice Hub, and Spreadsheet workspace.",
@@ -8,6 +9,8 @@
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "any",
+  "prefer_related_applications": false,
+  "related_applications": [],
   "categories": [
     "education",
     "utilities"
